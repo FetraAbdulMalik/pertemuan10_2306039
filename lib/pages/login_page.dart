@@ -13,9 +13,17 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _obscure = true;
+  String? _usernameError;
   String? _passwordError;
 
   Future<void> login() async {
+    final usr = usernameController.text;
+    final usernameValidation = _validateUsername(usr);
+    if (usernameValidation != null) {
+      setState(() => _usernameError = usernameValidation);
+      return;
+    }
+
     final pwd = passwordController.text;
     final validation = _validatePassword(pwd);
     if (validation != null) {
@@ -30,6 +38,12 @@ class _LoginPageState extends State<LoginPage> {
       context,
       MaterialPageRoute(builder: (_) => const HomePage()),
     );
+  }
+
+  String? _validateUsername(String usr) {
+    if (usr.isEmpty) return 'Username wajib diisi';
+    if (usr.length < 8) return 'Username minimal 8 karakter';
+    return null;
   }
 
   String? _validatePassword(String pwd) {
@@ -79,10 +93,14 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 20),
                   TextField(
                     controller: usernameController,
-                    onChanged: (_) => setState(() {}),
+                    onChanged: (v) {
+                      setState(() => _usernameError = _validateUsername(v));
+                    },
                     decoration: InputDecoration(
                       labelText: 'Username',
                       prefixIcon: const Icon(Icons.person),
+                      helperText: 'Minimal 8 karakter',
+                      errorText: _usernameError,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -120,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed:
-                          (usernameController.text.isNotEmpty &&
+                          (_validateUsername(usernameController.text) == null &&
                               _validatePassword(passwordController.text) ==
                                   null)
                           ? login
