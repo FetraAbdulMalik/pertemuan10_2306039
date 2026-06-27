@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pertemuan10_2306039/models/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class ProductDetailPage extends StatefulWidget {
   final ProductModel product;
@@ -62,8 +63,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
               final newProduct = ProductModel(
                 name: nameController.text,
-                description: descriptionController.text,
+                desc: descriptionController.text,
                 price: parsedPrice,
+                image: '',
               );
 
               final prefs = await SharedPreferences.getInstance();
@@ -94,6 +96,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            widget.product.image.isNotEmpty
+                ? Image.memory(
+                    base64Decode(widget.product.image),
+                    width: double.infinity,
+                    height: 250,
+                    fit: BoxFit.cover,
+                  )
+                : const Icon(Icons.image, size: 250),
+            const SizedBox(height: 20),
             Text(
               widget.product.name,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -101,7 +112,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             const SizedBox(height: 10),
             Text("Rp ${widget.product.price}"),
             const SizedBox(height: 10),
-            Text(widget.product.description),
+            Text(widget.product.desc),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pertemuan10_2306039/models/product_model.dart';
 import 'package:pertemuan10_2306039/pages/product_detail.dart';
+import 'dart:convert';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
@@ -39,7 +40,16 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
-            Text(product.description),
+            product.image.isNotEmpty
+                ? Image.memory(
+                    base64Decode(product.image),
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  )
+                : const Icon(Icons.image, size: 120),
+            const SizedBox(height: 4),
+            Text(product.desc),
             const SizedBox(height: 8),
             Text('Harga: Rp ${product.price}'),
           ],
@@ -49,13 +59,14 @@ class ProductCard extends StatelessWidget {
           children: [
             if (onEdit != null)
               IconButton(
-                icon: const Icon(Icons.edit, color: Colors.blue),
-                onPressed: onEdit,
+                icon: const Icon(Icons.edit, color: Colors.green),
+                onPressed: () => onEdit!(),
               ),
+            const SizedBox(width: 10),
             if (onDelete != null)
               IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: onDelete,
+                onPressed: () => onDelete!(),
               ),
           ],
         ),

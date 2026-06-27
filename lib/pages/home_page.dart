@@ -4,6 +4,7 @@ import 'package:pertemuan10_2306039/pages/product_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_page.dart';
 import '../models/product_model.dart';
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -238,7 +239,16 @@ class _HomePageState extends State<HomePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 4),
-                                  Text(product.description),
+                                  product.image.isNotEmpty
+                                      ? Image.memory(
+                                          base64Decode(product.image),
+                                          width: 120,
+                                          height: 120,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : const Icon(Icons.image, size: 120),
+                                  const SizedBox(height: 4),
+                                  Text(product.desc),
                                   const SizedBox(height: 8),
                                   Text('Harga: Rp ${product.price}'),
                                 ],
